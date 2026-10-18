@@ -1,50 +1,49 @@
 # CRC PLAY
 
-Magyar Honvédség alapú Crowd and Riot Control (CRC) játék – statikus PWA.
+Mobilra és asztali böngészőre készült, telepíthető, egyoldalas Canvas-játék. A körök célja a feszültség csökkentése, a biztonság és a békés párbeszéd támogatása.
 
-## Funkciók
-- 10 fős MH raj (PK, mesterlövész, 4 gépfegyveres, 2 sörétes, 2 porraloltós)
-- Formációk: doboz, ék, oszlop, vonal, nyitott, zárt
-- Parancsok: állj, előre, pajzsot fel/le, gázálarcot fel/le, fegyver!, koktél, jármű, vízágyú
-- GIDRAN támogató jármű
-- Firebase ranglista
-- PWA – iOS és Android home screenre tehető
+## Indítás
 
-## Gyors indítás
+A legegyszerűbb helyben egy statikus webszerverrel futtatni:
+
 ```bash
 npx serve .
 ```
-vagy egyszerűen nyisd meg az `index.html`-t böngészőben.
 
-## Deploy Vercelre
-1. Pushold a repót GitHubra
-2. Importáld Vercelre
-3. Automatikusan deployolódik (statikus)
+Ezután nyisd meg a webszerver által jelzett címet. A telepíthető PWA és az offline gyorsítótár HTTPS-en vagy localhoston működik.
 
-## Firebase beállítás
-1. Hozz létre egy Firebase projektet
-2. Engedélyezd a Firestore-t
-3. Másold a configot a `firebase-config.js` fájlba
-4. Alkalmazd a `firestore.rules` szabályokat
+## Irányítás
 
-## Fájlstruktúra
-```
-├── index.html
-├── manifest.webmanifest
-├── sw.js
-├── vercel.json
-├── firebase-config.js
-├── firestore.rules
-├── package.json
-├── README.md
-├── icons/
-│   ├── ikon-192.png
-│   ├── ikon-512.png
-│   ├── ikon-maszkolható.png
-│   └── apple-touch-icon.png
-└── audio/
-    └── (opcionális hangok)
+- `←` / `→` vagy `A` / `D`: mozgás
+- `1`, `2`, `3`: vonal, ék, doboz alakzat
+- `Szóköz`: párbeszéd vagy békés jelszó
+- Mobilon: érintőgombok a játéktér alatt
+
+Válassz szerepet a főmenüben. A kör 90 másodpercig tart; a közelben végrehajtott békés akció csökkenti a feszültséget és pontot ad. A legjobb eredmény eszközönként, helyben mentődik.
+
+## Fájlok
+
+```text
+index.html
+manifest.webmanifest
+sw.js
+vercel.json
+firebase-config.js
+firestore.rules
+icons/
+images/
 ```
 
-## Megosztás
-A Vercel linket bárki megnyithatja mobil böngészőben, és hozzáadhatja a kezdőképernyőhöz.
+The same detailed Hungarian CRC soldier is used in the game, main-menu logo and PWA icons. `images/soldier-crc.png` is the transparent game sprite and `images/soldier-crc-source.png` preserves the provided original image.
+
+## GitHub feltöltés
+
+Használd a `CRC-PLAY-GitHub.zip` csomagot: csomagold ki, majd töltsd fel a benne lévő fájlokat és mappákat úgy, hogy az `index.html` közvetlenül a repó gyökerében legyen. Ne töltsd fel a ZIP-et becsomagolva a repóba. Vercelen statikus projektként importáld; build parancs nem kell, a kimeneti mappa a repó gyökere.
+
+## Vercel
+
+Importáld a repót statikus projektként. Build parancs nem szükséges; a projekt gyökere legyen a fenti fájlokat tartalmazó mappa.
+
+## Firebase
+
+A `firebase-config.js` jelenleg helyőrző értékeket tartalmaz. Ranglista bekötése előtt töltsd ki saját Firebase konfigurációval, és ellenőrizd a Firestore szabályokat. A mostani játék a rekordot helyben menti; online ranglista még nincs bekötve.
