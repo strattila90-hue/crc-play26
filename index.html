@@ -67,13 +67,12 @@
     const canvas = document.getElementById('c');
     const ctx = canvas.getContext('2d');
 
-    // Jobb grafikák
+    // Sprite-ok
     const images = {};
     function loadImages() {
-      const list = ['soldier_shield', 'gidran'];
-      list.forEach(name => {
+      ['soldier', 'protester', 'gidran'].forEach(name => {
         const img = new Image();
-        img.src = '/images/' + name + '.jpg';
+        img.src = '/images/' + name + '.png';
         images[name] = img;
       });
     }
@@ -177,53 +176,87 @@
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Háttér – mindig látható
+      // Háttér
       ctx.fillStyle = '#1e293b';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#334155';
       ctx.fillRect(0, 280, canvas.width, 120);
 
-      // GIDRAN – mindig rajzolódik
-      ctx.fillStyle = '#4d7c0f';
-      ctx.fillRect(gidran.x, gidran.y, 130, 60);
-      ctx.fillStyle = '#fff';
-      ctx.font = 'bold 13px sans-serif';
-      ctx.fillText('GIDRAN', gidran.x + 35, gidran.y + 35);
+      const facingRight = (side === 'oszlató');
+
+      // GIDRAN
+      const gImg = images.gidran;
+      if (gImg && gImg.complete) {
+        ctx.save();
+        if (!facingRight) {
+          ctx.translate(gidran.x + 140, 0);
+          ctx.scale(-1, 1);
+          ctx.drawImage(gImg, 0, gidran.y - 10, 140, 75);
+        } else {
+          ctx.drawImage(gImg, gidran.x, gidran.y - 10, 140, 75);
+        }
+        ctx.restore();
+      } else {
+        ctx.fillStyle = '#4d7c0f';
+        ctx.fillRect(gidran.x, gidran.y, 130, 60);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillText('GIDRAN', gidran.x + 35, gidran.y + 35);
+      }
 
       if (waterActive) {
         ctx.strokeStyle = 'rgba(56,189,248,0.7)';
         ctx.lineWidth = 6;
         ctx.beginPath();
-        ctx.moveTo(gidran.x + 120, gidran.y + 20);
-        ctx.lineTo(gidran.x + 240, gidran.y);
+        ctx.moveTo(facingRight ? gidran.x + 120 : gidran.x + 10, gidran.y + 20);
+        ctx.lineTo(facingRight ? gidran.x + 240 : gidran.x - 100, gidran.y);
         ctx.stroke();
       }
 
-      // Katonák – mindig láthatók
+      // Katonák
       squad.forEach(s => {
         if (s.h <= 0) return;
-        ctx.fillStyle = s.role === 'EXT' ? '#dc2626' : '#2563eb';
-        ctx.fillRect(s.x, s.y, 32, 60);
-        if (s.shield) {
-          ctx.fillStyle = 'rgba(191,219,254,0.7)';
-          ctx.fillRect(s.x - 10, s.y - 5, 14, 65);
+        const img = images.soldier;
+        ctx.save();
+        if (img && img.complete) {
+          if (!facingRight) {
+            ctx.translate(s.x + 40, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(img, 0, s.y - 5, 42, 75);
+          } else {
+            ctx.drawImage(img, s.x - 5, s.y - 5, 42, 75);
+          }
+        } else {
+          ctx.fillStyle = '#2563eb';
+          ctx.fillRect(s.x, s.y, 32, 60);
         }
-        if (s.mask) {
-          ctx.fillStyle = 'rgba(0,0,0,0.5)';
-          ctx.fillRect(s.x + 6, s.y + 5, 18, 14);
-        }
+        ctx.restore();
+
         // Health
         ctx.fillStyle = '#ef4444';
-        ctx.fillRect(s.x, s.y - 7, 32, 3);
+        ctx.fillRect(s.x, s.y - 8, 32, 3);
         ctx.fillStyle = '#22c55e';
-        ctx.fillRect(s.x, s.y - 7, 32 * (s.h / 100), 3);
+        ctx.fillRect(s.x, s.y - 8, 32 * (s.h / 100), 3);
       });
 
       // Tüntetők
       protesters.forEach(p => {
         if (p.h <= 0) return;
-        ctx.fillStyle = '#b91c1c';
-        ctx.fillRect(p.x, p.y, 24, 50);
+        const img = images.protester;
+        ctx.save();
+        if (img && img.complete) {
+          if (facingRight) {
+            ctx.translate(p.x + 36, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(img, 0, p.y - 5, 36, 68);
+          } else {
+            ctx.drawImage(img, p.x, p.y - 5, 36, 68);
+          }
+        } else {
+          ctx.fillStyle = '#b91c1c';
+          ctx.fillRect(p.x, p.y, 24, 50);
+        }
+        ctx.restore();
       });
 
       // Molotovok
