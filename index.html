@@ -1,101 +1,228 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="hu">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
-  <meta name="theme-color" content="#091526">
-  <meta name="description" content="CRC PLAY — egy békés, taktikai tömegkezelő játék.">
-  <link rel="manifest" href="/manifest.webmanifest">
-  <link rel="icon" type="image/png" href="/icons/ikon-192.png">
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <title>CRC PLAY — Tér és taktika</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>CRC PLAY</title>
   <style>
-    :root{color-scheme:dark;--ink:#f4f7fa;--muted:#91a2b5;--panel:rgba(13,27,44,.86);--line:rgba(255,255,255,.11);--mint:#53e0ae;--gold:#ffc766}
-    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#081322;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
-    #app{position:relative;width:100%;height:100%;min-height:100dvh;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,#183554 0%,#0a192a 56%,#07111e 100%)}
-    .ambient{position:absolute;inset:0;pointer-events:none;opacity:.34;background:radial-gradient(circle at 12% 32%,rgba(67,177,197,.17),transparent 28%),radial-gradient(circle at 86% 72%,rgba(42,116,103,.16),transparent 27%)}
-    .screen{position:absolute;inset:0;display:none}.screen.active{display:flex}
-    #home{align-items:center;justify-content:center;padding:24px;overflow:auto}.home-wrap{position:relative;z-index:1;width:min(1080px,100%);display:grid;grid-template-columns:1fr .9fr;gap:clamp(24px,6vw,78px);align-items:center}.brand{display:flex;align-items:center;gap:12px;margin-bottom:26px}.brand-mark{width:48px;height:48px;border-radius:15px;background:#0a1b30;box-shadow:0 8px 30px #0008;display:grid;place-items:center;overflow:hidden}.brand-mark img{width:100%;height:100%;object-fit:cover;object-position:50% 12%}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:.2em;font-weight:800;margin-bottom:3px}.brand strong{font-size:14px;letter-spacing:.18em}.eyebrow{color:var(--mint);letter-spacing:.19em;text-transform:uppercase;font-size:11px;font-weight:800}.hero h1{font-size:clamp(48px,8vw,92px);line-height:.9;letter-spacing:-.075em;margin:14px 0 20px}.hero h1 span{display:block;color:transparent;-webkit-text-stroke:1px rgba(235,245,255,.66)}.hero p{max-width:440px;color:#b0bdca;font-size:16px;line-height:1.65;margin:0}.hero-note{display:flex;align-items:center;gap:10px;margin-top:30px;color:#9eafbd;font-size:12px}.pulse{width:8px;height:8px;border-radius:50%;background:var(--mint);box-shadow:0 0 14px var(--mint)}
-    .select-card{border:1px solid var(--line);border-radius:24px;padding:22px;background:linear-gradient(145deg,rgba(23,44,66,.9),rgba(10,23,38,.92));box-shadow:0 24px 80px #0006;backdrop-filter:blur(18px)}.select-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}.select-head h2{font-size:16px;margin:0}.select-head span{font-size:10px;color:var(--muted);letter-spacing:.12em}.side-choice{width:100%;text-align:left;display:grid;grid-template-columns:52px 1fr 22px;gap:14px;align-items:center;padding:15px;margin:9px 0;border:1px solid rgba(255,255,255,.1);border-radius:16px;background:rgba(255,255,255,.035);transition:.2s transform,.2s border-color,.2s background}.side-choice:hover{transform:translateY(-2px);border-color:#53e0ae88;background:rgba(83,224,174,.07)}.side-icon{width:50px;height:50px;border-radius:15px;display:grid;place-items:center;font-size:24px;background:linear-gradient(145deg,#26435d,#14283c)}.side-choice:nth-of-type(3) .side-icon{background:linear-gradient(145deg,#634235,#362b35)}.side-choice strong{display:block;font-size:15px;margin-bottom:4px}.side-choice small{display:block;color:#9aacbc;font-size:11px;line-height:1.45}.arrow{font-size:20px;color:var(--mint)}.mini-rules{border-top:1px solid var(--line);margin-top:17px;padding-top:15px;color:#90a2b4;font-size:11px;line-height:1.55}.mini-rules b{color:#dce7ef}
-    #game{flex-direction:column;padding:clamp(10px,2vw,22px);gap:10px}.topbar{position:relative;z-index:2;display:flex;align-items:center;gap:12px;min-height:48px}.top-brand{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:900;letter-spacing:.15em;white-space:nowrap}.top-soldier-mark{width:30px;height:38px;border-radius:9px;object-fit:cover;object-position:50% 12%;background:#0a1b30}.top-brand em{color:var(--mint);font-style:normal}.mode-label{color:#aebdca;font-size:12px}.goal-label{color:#d9e4eb;font-size:11px;border-left:1px solid var(--line);padding-left:12px}.spacer{flex:1}.status-pill{border:1px solid var(--line);background:#ffffff08;border-radius:99px;padding:8px 12px;color:#dce7ed;font-size:11px;display:flex;gap:8px;align-items:center}.status-pill b{color:var(--gold);font-variant-numeric:tabular-nums}.icon-btn{width:42px;height:42px;border:1px solid var(--line);border-radius:13px;background:#ffffff08;font-size:18px}.stage{position:relative;flex:1;min-height:0;border:1px solid rgba(255,255,255,.13);border-radius:22px;overflow:hidden;background:#97bac3;box-shadow:0 20px 70px #0007}.stage canvas{display:block;width:100%;height:100%;touch-action:none}.stage::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;box-shadow:inset 0 0 90px rgba(5,16,28,.24)}.hud{position:absolute;z-index:1;left:16px;top:14px;display:flex;gap:8px;align-items:center;pointer-events:none}.hud-card{background:rgba(9,24,38,.74);border:1px solid #ffffff22;backdrop-filter:blur(8px);border-radius:12px;padding:8px 11px;min-width:104px}.hud-card span{display:block;color:#b3c4cf;font-size:9px;letter-spacing:.12em;text-transform:uppercase}.hud-card b{display:block;font-size:15px;margin-top:3px}.tension{width:130px}.meter{height:5px;background:#ffffff1a;border-radius:8px;margin-top:6px;overflow:hidden}.meter i{height:100%;display:block;width:24%;background:linear-gradient(90deg,#4bd3a1,#f4ca68,#ed795c);border-radius:8px;transition:width .25s}
-    .bottom{display:grid;grid-template-columns:1fr auto;align-items:center;gap:12px;min-height:78px}.command-row{display:flex;align-items:center;gap:8px;overflow:auto;scrollbar-width:none}.command-row::-webkit-scrollbar{display:none}.command{border:1px solid var(--line);border-radius:13px;background:rgba(17,35,53,.85);padding:11px 14px;white-space:nowrap;font-size:12px;transition:.15s}.command:hover,.command.selected{border-color:#53e0ae88;background:rgba(83,224,174,.12)}.command small{color:#98aabb;margin-left:7px}.formation-label{font-size:10px;color:#89a0b2;margin-right:3px}.controls-help{color:#8da0b0;font-size:10px;white-space:nowrap}.mobile-pad{display:none;gap:10px}.mobile-pad button{width:47px;height:47px;border:1px solid var(--line);border-radius:13px;background:#142a3d;touch-action:none;-webkit-user-select:none;user-select:none}.mobile-pad button:active{transform:scale(.96);background:#24614f}
-    .toast{position:absolute;z-index:5;left:50%;top:78px;max-width:min(92%,620px);transform:translate(-50%,-10px);opacity:0;pointer-events:none;transition:.25s;background:rgba(7,22,36,.94);border:1px solid #53e0ae66;color:#eaf9f5;border-radius:12px;padding:11px 16px;font-size:12px;line-height:1.5;overflow-wrap:anywhere;box-shadow:0 12px 35px #0006}.toast.show{opacity:1;transform:translate(-50%,0)}
-    .overlay{position:absolute;z-index:4;inset:0;display:none;place-items:center;background:rgba(4,13,23,.62);backdrop-filter:blur(8px);padding:18px}.overlay.show{display:grid}.result-card{width:min(410px,100%);text-align:center;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,#18314a,#0c1d30);padding:28px;box-shadow:0 30px 100px #0009}.result-icon{font-size:38px}.result-card h2{font-size:28px;margin:10px}.result-card p{color:#a9bac8;line-height:1.6;font-size:13px}.result-score{font-size:38px;font-weight:900;color:var(--mint);margin:15px}.primary{border:0;border-radius:12px;padding:12px 18px;background:linear-gradient(135deg,#56e2b1,#31b68f);color:#062019;font-weight:900;margin:5px}.secondary{border:1px solid var(--line);border-radius:12px;padding:12px 18px;background:#ffffff08;margin:5px}
-    @media(max-width:760px){.home-wrap{grid-template-columns:1fr;gap:28px;max-width:520px;padding:10px 0}.hero h1{font-size:60px;margin:10px 0 14px}.hero p{font-size:14px}.hero-note{margin-top:18px}.select-card{padding:17px}.home-wrap .brand{margin-bottom:12px}#home{padding:22px}.topbar{gap:8px}.mode-label{display:none}.status-pill{padding:8px 10px;font-size:10px}.status-pill:nth-of-type(2){display:none}.bottom{grid-template-columns:1fr;gap:9px;min-height:auto}.command-row{padding:2px 0}.command{padding:11px 12px}.controls-help{display:none}.mobile-pad{display:flex;justify-content:center;align-items:center;padding-bottom:env(safe-area-inset-bottom,0)}.stage{border-radius:16px}.hud{left:9px;top:9px;gap:5px}.hud-card{padding:7px 9px;min-width:88px}.hud-card span{font-size:8px}.hud-card b{font-size:13px}.tension{width:108px}.toast{top:68px}}
-    @media(max-width:400px){.hero h1{font-size:52px}.side-choice{padding:12px;grid-template-columns:45px 1fr 18px}.side-icon{width:43px;height:43px}.status-pill:nth-of-type(1){display:none}}
-    @media(orientation:portrait) and (max-width:760px){#game{padding:8px;gap:7px}.stage{min-height:240px;max-height:calc(100dvh - 256px)}.bottom{flex:0 0 auto}.command-row{max-width:100%}.topbar{min-height:40px}}
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#0f172a; color:#fff; font-family:system-ui,sans-serif; overflow:hidden; }
+    #game { width:100%; height:100vh; display:flex; flex-direction:column; }
+    canvas { width:100%; flex:1; background:#1e293b; display:block; }
+    .ui { padding:6px; background:#1e293b; display:flex; flex-wrap:wrap; gap:4px; }
+    button { padding:8px 10px; background:#334155; color:#fff; border:none; border-radius:6px; font-size:12px; }
+    button.active { background:#1e40af; }
+    .menu { text-align:center; padding:30px 16px; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+    .menu button { font-size:18px; padding:16px 32px; margin:8px; }
+    .exit-btn { position:absolute; top:8px; right:8px; background:#b91c1c; z-index:10; }
   </style>
 </head>
 <body>
-<main id="app"><div class="ambient"></div>
-  <section id="home" class="screen active" aria-label="Főmenü">
-    <div class="home-wrap">
-      <div class="hero">
-        <div class="brand"><div class="brand-mark"><img src="/images/soldier-crc.png" alt=""></div><div><small>MAGYARORSZÁG · 2026</small><strong>CRC PLAY</strong></div></div>
-        <div class="eyebrow">Tér és taktika</div>
-        <h1>Maradj<br><span>higgadt.</span></h1>
-        <p>Egy látványos, oldalnézetes stratégiai játék, ahol a jó döntés többet ér az erőnél. Tartsd biztonságban a teret, és vezesd a helyzetet nyugalom felé.</p>
-        <div class="hero-note"><i class="pulse"></i> Békés, döntésalapú játékmenet · 90 másodperces körök</div>
-      </div>
-      <div class="select-card">
-        <div class="select-head"><h2>Válassz szerepet</h2><span>01 / 02</span></div>
-        <button class="side-choice" onclick="startGame('mh')"><span class="side-icon">🛡️</span><span><strong>Oszlató · MH</strong><small>Vezesd a szakaszt, nyiss biztonságos útvonalat, és csillapítsd a feszültséget.</small></span><b class="arrow">›</b></button>
-        <button class="side-choice" onclick="startGame('crowd')"><span class="side-icon">✊</span><span><strong>Tüntető</strong><small>Szervezd a tömeget, tartsd láthatóan a békés üzenetet, és kerüld a torlódást.</small></span><b class="arrow">›</b></button>
-        <div class="mini-rules"><b>Cél:</b> növeld a biztonságot és a bizalmat. <b>Irányítás:</b> ← → vagy A / D · akció: szóköz · mobilon érintőgombok.</div>
-      </div>
+  <div id="game">
+    <div id="menu" class="menu">
+      <h1>CRC PLAY</h1>
+      <p>Magyar Honvédség szakasz + GIDRAN</p>
+      <button onclick="start('oszlató')">Oszlató (MH)</button>
+      <button onclick="start('tüntető')" style="background:#b91c1c">Tüntető</button>
     </div>
-  </section>
-  <section id="game" class="screen" aria-label="Játéktér">
-    <header class="topbar"><div class="top-brand"><img class="top-soldier-mark" src="/images/soldier-crc.png" alt=""> CRC <em>PLAY</em></div><div class="mode-label" id="modeLabel">Oszlató · MH</div><div class="spacer"></div><div class="status-pill">KÖR <b id="timer">01:30</b></div><div class="status-pill">LEGJOBB <b id="best">0</b></div><button class="icon-btn" aria-label="Vissza a menübe" onclick="backHome()">↩</button></header>
-    <div class="stage"><canvas id="scene" aria-label="Oldalnézetes játéktér"></canvas><div class="hud"><div class="hud-card"><span>Biztonság</span><b id="score">000</b></div><div class="hud-card tension"><span>Feszültség</span><div class="meter"><i id="tensionBar"></i></div></div></div><div class="toast" id="toast"></div><div class="overlay" id="result"><div class="result-card"><div class="result-icon" id="resultIcon">✦</div><h2 id="resultTitle">Szép munka!</h2><p id="resultText"></p><div class="result-score" id="resultScore">0</div><button class="primary" onclick="restartGame()">Új kör</button><button class="secondary" onclick="backHome()">Főmenü</button></div></div></div>
-    <div class="bottom"><div class="command-row"><span class="formation-label">ALAKZAT</span><button class="command selected" data-form="vonal" onclick="setFormation('vonal')">Vonal<small>1</small></button><button class="command" data-form="ék" onclick="setFormation('ék')">Ék<small>2</small></button><button class="command" data-form="doboz" onclick="setFormation('doboz')">Doboz<small>3</small></button><button class="command action-command" onclick="specialAction()">💬 Párbeszéd<small>␣</small></button></div><div class="controls-help">← → mozgás · szóköz akció</div><div class="mobile-pad"><button aria-label="Balra" data-key="ArrowLeft">←</button><button aria-label="Párbeszéd" onclick="specialAction()">💬</button><button aria-label="Jobbra" data-key="ArrowRight">→</button></div></div>
-  </section>
-</main>
-<script>
-(() => {
-  const canvas=document.getElementById('scene'),ctx=canvas&&canvas.getContext('2d');
-  if(!canvas||!ctx){document.body.innerHTML='<main style="font:16px system-ui;padding:2rem;color:#fff;background:#081322;min-height:100vh"><h1>A játék nem tudott elindulni</h1><p>Ez a böngésző nem támogatja a szükséges vásznat. Frissítsd az oldalt, vagy nyisd meg egy újabb böngészőben.</p></main>';return}
-  const safeGet=(key,fallback='')=>{try{return localStorage.getItem(key)??fallback}catch{return fallback}};
-  const safeSet=(key,value)=>{try{localStorage.setItem(key,String(value))}catch{notify('A rekord mentése nem érhető el ebben a böngészőben.')}};
-  const art={};for(const [name,path] of Object.entries({soldier:'/images/soldier-crc.png',protester:'/images/protester.png'})){const image=new Image();image.src=path;art[name]=image}
-  const home=document.getElementById('home'),game=document.getElementById('game');
-  const W=1000,H=560; let dpr=1, raf=0, active=false, side='mh',elapsed=0,score=0,tension=24,formation='vonal',player={x:215},crowd=[],particles=[],pulses=[],toastTimer=0,actionCooldown=0,keys={};
-  const colors=['#e8b493','#d79c79','#f0c5a2','#bd8062','#e4aa8c'];
-  const rand=(a,b)=>a+Math.random()*(b-a); const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-  function resize(){const r=canvas.getBoundingClientRect();if(!r.width||!r.height)return;dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.round(r.width*dpr);canvas.height=Math.round(r.height*dpr);ctx.setTransform(canvas.width/W,0,0,canvas.height/H,0,0)}
-  if('ResizeObserver'in window)new ResizeObserver(resize).observe(canvas);else window.addEventListener('resize',resize);
-  function startGame(which){side=which;home.classList.remove('active');game.classList.add('active');document.getElementById('modeLabel').textContent=side==='mh'?'Oszlató · MH':'Tüntető';document.getElementById('actionName').textContent=side==='mh'?'Párbeszéd':'Békés jelszó';reset();resize();active=true;last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
-  function reset(){elapsed=0;score=0;tension=side==='mh'?25:30;player.x=side==='mh'?205:750;actionCooldown=0;crowd=Array.from({length:64},(_,i)=>({x:rand(465,995),y:300+rand(-28,70),phase:rand(0,7),shirt:['#e9c16e','#df836f','#6b9bc0','#a48bbd','#80ac8d','#e8ece9'][i%6],skin:colors[i%colors.length],sign:i%8===0,calm:0}));particles=[];pulses=[];document.getElementById('result').classList.remove('show');document.querySelectorAll('.command[data-form]').forEach((b,i)=>b.classList.toggle('selected',i===0));formation='vonal';updateHud()}
-  let last=0;function loop(now){if(!active)return;const dt=Math.min((now-last)/1000,.04);last=now;update(dt);draw(now/1000);raf=requestAnimationFrame(loop)}
-  function update(dt){elapsed+=dt;actionCooldown=Math.max(0,actionCooldown-dt);if(elapsed>=90){finish();return}let dir=(keys.ArrowRight||keys.d?1:0)-(keys.ArrowLeft||keys.a?1:0);player.x=clamp(player.x+dir*230*dt,80,920);crowd.forEach((p,i)=>{p.phase+=dt*(1.1+(i%3)*.12);p.calm=Math.max(0,p.calm-dt);let flow=side==='mh'?(p.calm?1.2:.35):(p.calm?-.25:.2);p.x=clamp(p.x+Math.sin(p.phase*.7)*9*dt+flow*12*dt,475,965);p.y=300+Math.sin(p.phase+i)*17+(i%5)*7});if(Math.random()<dt*3){const x=rand(440,970),y=rand(260,360);particles.push({x,y,vy:rand(-22,-8),life:1,size:rand(1,3)})}particles.forEach(p=>{p.y+=p.vy*dt;p.life-=dt*.45});particles=particles.filter(p=>p.life>0);pulses.forEach(p=>{p.r+=dt*260;p.life-=dt});pulses=pulses.filter(p=>p.life>0);if(Math.random()<dt*.7)tension=clamp(tension+rand(-1.2,1.3),8,88);score+=dt*(Math.max(0,1-tension/115)*7+Math.max(0,1-Math.abs(player.x-650)/800)*1.1);updateHud()}
-  function updateHud(){document.getElementById('score').textContent=String(Math.floor(score)).padStart(3,'0');const left=Math.max(0,90-elapsed);document.getElementById('timer').textContent=`${String(Math.floor(left/60)).padStart(2,'0')}:${String(Math.floor(left%60)).padStart(2,'0')}`;document.getElementById('tensionBar').style.width=tension+'%';document.getElementById('best').textContent=safeGet('crc-best-'+side,'0')}
-  function setFormation(f){formation=f;document.querySelectorAll('.command[data-form]').forEach(b=>b.classList.toggle('selected',b.dataset.form===f));notify(`Alakzat: ${f}`);if(side==='mh')score+=3}
-  function specialAction(){if(!active||actionCooldown>0)return;actionCooldown=2.3;const radius=side==='mh'?390:330;let affected=0;crowd.forEach(p=>{if(Math.abs(p.x-player.x)<radius){p.calm=4;affected++}});const good=affected>=5;tension=clamp(tension-(good?16:7),8,88);score+=good?28:10;pulses.push({x:player.x,y:360,r:5,life:.9});for(let i=0;i<18;i++)particles.push({x:player.x+rand(-18,18),y:rand(290,380),vy:rand(-55,-12),life:rand(.5,1),size:rand(2,5)});notify(good?(side==='mh'?'A nyugodt párbeszéd működik.':'A békés üzenet összehozza a tömeget.'):'Jó kezdeményezés — közelíts a csoporthoz!')}
-  function notify(msg,persistent=false){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);if(!persistent)toastTimer=setTimeout(()=>el.classList.remove('show'),4500)}
-  window.addEventListener('error',event=>{if(!event.message&&!event.error){console.warn('CRC PLAY resource load error',event.target);return}console.error('CRC PLAY runtime error',event.error||event.message,event.filename,event.lineno);active=false;cancelAnimationFrame(raf);notify(`Játékhiba: ${event.message||event.error?.message||'ismeretlen JavaScript hiba'}${event.lineno?` (sor: ${event.lineno})`:''}`,true)});
-  window.addEventListener('unhandledrejection',event=>{console.error('CRC PLAY unhandled rejection',event.reason);const detail=event.reason&&event.reason.message?event.reason.message:String(event.reason||'ismeretlen háttérhiba');notify(`Háttérhiba: ${detail}`,true)});
-  function finish(){active=false;cancelAnimationFrame(raf);const value=Math.floor(score);const old=Number(safeGet('crc-best-'+side,'0'))||0;if(value>old)safeSet('crc-best-'+side,value);document.getElementById('resultIcon').textContent=tension<35?'🌿':'✦';document.getElementById('resultTitle').textContent=tension<35?'Sikerült megőrizni a nyugalmat!':'Véget ért a kör';document.getElementById('resultText').textContent=tension<35?'A jó ütemű, békés döntésekkel biztonságosabbá tetted a teret.':'Minden kör új lehetőség a nyugodtabb megoldásra. Próbálj közelebb menni a csoporthoz az akció előtt.';document.getElementById('resultScore').textContent=value+' pont';document.getElementById('result').classList.add('show');updateHud()}
-  function restartGame(){reset();active=true;last=performance.now();raf=requestAnimationFrame(loop)}function backHome(){active=false;cancelAnimationFrame(raf);game.classList.remove('active');home.classList.add('active');document.getElementById('result').classList.remove('show')}
-  function rr(x,y,w,h,r,fill,stroke){r=Math.min(r,w/2,h/2);ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke()}}
-  function draw(t){ctx.clearRect(0,0,W,H);drawSky(t);drawCity(t);drawGround();drawRoute(t);drawCrowd(t);drawTeam(t);drawEffects();drawForeground()}
-  function drawSky(t){let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#111c29');g.addColorStop(.36,'#293642');g.addColorStop(.7,'#96634e');g.addColorStop(1,'#202932');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(255,175,119,.24)';ctx.beginPath();ctx.arc(795,134,47,0,Math.PI*2);ctx.fill();ctx.fillStyle='rgba(245,168,121,.08)';ctx.beginPath();ctx.arc(795,134,91,0,Math.PI*2);ctx.fill();for(let i=0;i<5;i++){let x=((i*260-t*5)%1250+1250)%1250-110;ctx.fillStyle='rgba(32,43,53,.42)';ctx.beginPath();ctx.ellipse(x,89+i%3*31,75,15,0,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.ellipse(x+43,83+i%3*31,41,21,0,0,Math.PI*2);ctx.fill()}}
-  function drawCity(t){const buildings=[[-20,142,170,188,'#303a43'],[140,112,178,218,'#3a3c3d'],[310,151,180,179,'#293941'],[488,92,180,238,'#393c3e'],[673,130,170,200,'#2e3b40'],[838,103,190,227,'#343a3d']];buildings.forEach(([x,y,w,h,c],bi)=>{ctx.fillStyle=c;ctx.fillRect(x,y,w,h);ctx.fillStyle='rgba(236,166,111,.15)';ctx.fillRect(x,y,w,7);for(let yy=y+28;yy<y+h-28;yy+=34)for(let xx=x+17;xx<x+w-12;xx+=34){const lit=Math.floor(xx/34+yy/34+bi)%4===0;ctx.fillStyle=lit?'#b98c65':'#1b2933';ctx.fillRect(xx,yy,15,20);ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(xx+2,yy+2,3,15)}if(bi===3){ctx.fillStyle='#1a2730';ctx.fillRect(x+38,y-20,108,22);ctx.fillStyle='#ddb494';ctx.font='bold 10px system-ui';ctx.fillText('VÁROSI TÉR',x+52,y-5)}});ctx.fillStyle='#27352f';for(let i=0;i<6;i++){const x=i*205+40;ctx.beginPath();ctx.arc(x,275,30,0,Math.PI*2);ctx.fill();ctx.fillStyle='#3a4535';ctx.beginPath();ctx.arc(x-9,260,20,0,Math.PI*2);ctx.fill();ctx.fillStyle='#27352f';ctx.fillRect(x-3,272,6,30)}}
-  function drawGround(){const g=ctx.createLinearGradient(0,300,0,H);g.addColorStop(0,'#544a43');g.addColorStop(.26,'#383b3a');g.addColorStop(1,'#1e252b');ctx.fillStyle=g;ctx.fillRect(0,300,W,H);ctx.fillStyle='#262c30';ctx.fillRect(0,408,W,152);ctx.fillStyle='rgba(238,203,159,.23)';for(let i=0;i<12;i++){const x=i*110;ctx.fillRect(x,431,54,3);ctx.fillRect(x+48,347,3,6);ctx.fillRect(x+80,372,2,2)}ctx.fillStyle='rgba(209,160,120,.31)';ctx.fillRect(0,398,W,2);ctx.fillStyle='rgba(8,13,18,.5)';ctx.fillRect(0,410,W,3);for(let i=0;i<13;i++){const x=(i*97+34)%W,y=416+(i%4)*25;ctx.fillStyle='rgba(8,11,14,.5)';ctx.fillRect(x,y,rand(8,28),rand(2,5))}}
-  function drawRoute(t){const glow=ctx.createRadialGradient(500,358,5,500,358,400);glow.addColorStop(0,'rgba(74,223,176,.18)');glow.addColorStop(1,'rgba(74,223,176,0)');ctx.fillStyle=glow;ctx.fillRect(160,280,700,160);ctx.strokeStyle='rgba(100,235,186,.55)';ctx.lineWidth=3;ctx.setLineDash([12,13]);ctx.lineDashOffset=-t*22;ctx.beginPath();ctx.moveTo(345,380);ctx.lineTo(910,380);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(70,228,175,.8)';ctx.beginPath();ctx.moveTo(910,372);ctx.lineTo(928,380);ctx.lineTo(910,388);ctx.fill();rr(892,322,79,22,7,'rgba(17,63,55,.8)');ctx.fillStyle='#c0f4dc';ctx.font='700 10px system-ui';ctx.textAlign='center';ctx.fillText('BIZTONSÁGOS ÚT',931,337);ctx.textAlign='left'}
-  function drawArtwork(name,x,y,w,h,flip=false,filter='none'){const image=art[name];if(!image||!image.complete||!image.naturalWidth)return false;ctx.save();ctx.globalCompositeOperation=name==='soldier'?'source-over':'multiply';ctx.filter=filter;if(flip){ctx.translate(x*2+w,0);ctx.scale(-1,1)}ctx.drawImage(image,x,y,w,h);ctx.restore();return true}
-  function drawPerson(x,y,scale,shirt,skin,phase,shield=false){ctx.save();ctx.translate(x,y+Math.sin(phase)*2);ctx.scale(scale,scale);ctx.fillStyle='rgba(20,27,30,.42)';ctx.beginPath();ctx.ellipse(0,1,11,4,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#27323a';ctx.lineWidth=4;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-3,-22);ctx.lineTo(-4,-2);ctx.moveTo(3,-22);ctx.lineTo(5,-2);ctx.stroke();rr(-7,-43,15,24,5,shirt);ctx.strokeStyle=skin;ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-6,-38);ctx.lineTo(-12,-25);ctx.moveTo(6,-38);ctx.lineTo(12,-29);ctx.stroke();ctx.fillStyle=skin;ctx.beginPath();ctx.arc(0,-49,7,0,Math.PI*2);ctx.fill();ctx.fillStyle='#3a3029';ctx.beginPath();ctx.arc(-1,-51,7,Math.PI,Math.PI*2);ctx.fill();if(shield){rr(-19,-42,10,26,3,'rgba(166,215,220,.82)','#d9f4ee');ctx.fillStyle='rgba(255,255,255,.45)';ctx.fillRect(-17,-38,2,16)}ctx.restore()}
-  function drawCrowd(t){crowd.slice().sort((a,b)=>a.y-b.y).forEach((p,i)=>{const w=37,h=52,filter=`hue-rotate(${(i%5-2)*7}deg) saturate(.78)`;if(!drawArtwork('protester',p.x-w/2,p.y-h,w,h,i%3===0,filter))drawPerson(p.x,p.y,randScale(i),p.shirt,p.skin,p.phase,false);if(p.sign&&!art.protester.complete){ctx.save();ctx.translate(p.x+10,p.y-58);ctx.rotate(Math.sin(p.phase)*.07);rr(-17,-11,34,21,3,'#eadcae','#6c5847');ctx.fillStyle='#493d37';ctx.font='bold 6px system-ui';ctx.textAlign='center';ctx.fillText('BÉKÉT',0,-1);ctx.fillText('ÉS PÁRBESZÉDET',0,6);ctx.strokeStyle='#755d45';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,10);ctx.lineTo(0,23);ctx.stroke();ctx.restore()}})}
-  function randScale(i){return .78+(i%4)*.07}
-  function formationPosition(i){if(formation==='ék'){const counts=[3,5,7,12];let left=i,layer=0;while(left>=counts[layer]){left-=counts[layer];layer++}return {x:layer*42,y:(left-(counts[layer]-1)/2)*25}}if(formation==='doboz')return {x:(i%6-2.5)*40,y:(Math.floor(i/6)-2)*21};return {x:(i%9-4)*40,y:(Math.floor(i/9)-1)*22}}
-  function drawTeam(t){if(side==='mh'){drawVehicle(45,360,t);for(let i=0;i<27;i++){const pos=formationPosition(i),x=player.x+pos.x,y=365+pos.y;if(!drawArtwork('soldier',x-18,y-78,36,84))drawPerson(x,y,.72,'#65794f','#d5a182',t+i,formation==='vonal'||formation==='doboz')}drawLeader(player.x,342,t,true)}else{for(let i=0;i<8;i++){let x=player.x-52+(i%4)*28,y=366+Math.floor(i/4)*29;drawPerson(x,y,.94,['#d18e56','#5793aa','#966ca6','#8ba365'][i%4],colors[i%colors.length],t+i,false)}drawLeader(player.x,343,t,false)}}
-  function drawLeader(x,y,t,military){ctx.save();ctx.translate(x,y);ctx.fillStyle='rgba(12,25,31,.28)';ctx.beginPath();ctx.ellipse(0,22,24,7,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#29343b';ctx.lineWidth=7;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(-7,8);ctx.lineTo(-10,33);ctx.moveTo(7,8);ctx.lineTo(10,33);ctx.stroke();rr(-15,-28,30,39,9,military?'#526a43':'#b9704f');ctx.strokeStyle=military?'#d7a27e':'#dca685';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-12,-17);ctx.lineTo(-21,-1);ctx.moveTo(12,-16);ctx.lineTo(20,-3);ctx.stroke();ctx.fillStyle=military?'#d7a27e':'#e2b294';ctx.beginPath();ctx.arc(0,-39,11,0,Math.PI*2);ctx.fill();if(military){ctx.fillStyle='#3e5140';ctx.beginPath();ctx.arc(0,-43,12,Math.PI,Math.PI*2);ctx.fill();rr(-13,-42,26,5,2,'#36483a')}else{ctx.fillStyle='#422f27';ctx.beginPath();ctx.arc(-1,-43,11,Math.PI,Math.PI*2);ctx.fill();rr(-14,-52,28,6,3,'#e9d4aa')}ctx.restore();ctx.fillStyle='rgba(10,25,37,.8)';ctx.font='700 9px system-ui';ctx.textAlign='center';ctx.fillText(military?'SZAKASZ':'SZERVEZŐ',x,y-63);ctx.textAlign='left'}
-  function drawVehicle(x,y,t){ctx.save();ctx.translate(x,y+Math.sin(t*1.2)*1.3);ctx.fillStyle='rgba(4,8,11,.52)';ctx.beginPath();ctx.ellipse(99,12,108,12,0,0,Math.PI*2);ctx.fill();rr(8,-37,188,39,9,'#555747','#1c2728');ctx.fillStyle='#4b5144';ctx.beginPath();ctx.moveTo(15,-37);ctx.lineTo(27,-55);ctx.lineTo(68,-64);ctx.lineTo(126,-59);ctx.lineTo(151,-37);ctx.closePath();ctx.fill();ctx.fillStyle='#abc1b1';ctx.beginPath();ctx.moveTo(34,-53);ctx.lineTo(62,-59);ctx.lineTo(60,-42);ctx.lineTo(27,-42);ctx.closePath();ctx.fill();ctx.fillStyle='#8b997d';ctx.beginPath();ctx.moveTo(80,-59);ctx.lineTo(122,-56);ctx.lineTo(137,-40);ctx.lineTo(76,-40);ctx.closePath();ctx.fill();ctx.fillStyle='#303a32';ctx.beginPath();ctx.moveTo(96,-59);ctx.lineTo(103,-78);ctx.lineTo(139,-78);ctx.lineTo(151,-67);ctx.lineTo(146,-58);ctx.closePath();ctx.fill();ctx.fillRect(134,-75,45,4);ctx.fillStyle='#a8b89c';ctx.fillRect(106,-73,8,7);ctx.fillStyle='#e8e9cf';ctx.font='bold 9px system-ui';ctx.fillText('GIDRÁN',71,-20);ctx.fillStyle='#e2e5df';ctx.fillRect(166,-32,4,4);ctx.fillStyle='#d34b40';ctx.fillRect(183,-28,5,7);for(let i=0;i<4;i++){const wx=[34,80,132,180][i];ctx.fillStyle='#151b1d';ctx.beginPath();ctx.arc(wx,1,13,0,Math.PI*2);ctx.fill();ctx.fillStyle='#6e7164';ctx.beginPath();ctx.arc(wx,1,5,0,Math.PI*2);ctx.fill();ctx.fillStyle='#a4a48e';ctx.beginPath();ctx.arc(wx,1,2,0,Math.PI*2);ctx.fill()}ctx.fillStyle='#fff';ctx.fillRect(58,-34,16,2);ctx.fillStyle='#d62838';ctx.fillRect(58,-34,16,1);ctx.fillStyle='#17965d';ctx.fillRect(58,-33,16,1);ctx.restore()}
-  function drawEffects(){particles.forEach(p=>{ctx.globalAlpha=clamp(p.life,0,1);ctx.fillStyle='#b9f6d8';ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill()});ctx.globalAlpha=1;pulses.forEach(p=>{ctx.globalAlpha=p.life*.65;ctx.strokeStyle='#b4ffdc';ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,360,p.r,0,Math.PI*2);ctx.stroke()});ctx.globalAlpha=1}
-  function drawForeground(){ctx.fillStyle='rgba(5,9,13,.38)';for(let i=0;i<18;i++){const x=(i*79+17)%W;ctx.beginPath();ctx.ellipse(x,501+(i%3)*12,rand(2,8),1,0,0,Math.PI*2);ctx.fill()}const vignette=ctx.createRadialGradient(W/2,H*.48,150,W/2,H*.48,610);vignette.addColorStop(0,'rgba(7,11,16,0)');vignette.addColorStop(1,'rgba(5,9,15,.56)');ctx.fillStyle=vignette;ctx.fillRect(0,0,W,H);ctx.fillStyle='rgba(227,201,166,.035)';for(let i=0;i<90;i++){const x=(i*137)%W,y=(i*83)%H;ctx.fillRect(x,y,2,2)}}
-  window.startGame=startGame;window.setFormation=setFormation;window.specialAction=specialAction;window.restartGame=restartGame;window.backHome=backHome;
-  window.addEventListener('keydown',e=>{if(['ArrowLeft','ArrowRight',' '].includes(e.key))e.preventDefault();keys[e.key]=true;if(e.key===' '){specialAction()}if(['1','2','3'].includes(e.key))setFormation(['vonal','ék','doboz'][Number(e.key)-1])});window.addEventListener('keyup',e=>keys[e.key]=false);document.querySelectorAll('[data-key]').forEach(btn=>{const key=btn.dataset.key;btn.addEventListener('pointerdown',e=>{e.preventDefault();keys[key]=true;btn.setPointerCapture(e.pointerId)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>btn.addEventListener(ev,()=>keys[key]=false))});
-  if('serviceWorker'in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-})();
-</script>
+    <canvas id="c" width="900" height="450" style="display:none"></canvas>
+    <button id="exitBtn" class="exit-btn" style="display:none" onclick="exitGame()">Kilépés</button>
+    <div id="controls" class="ui" style="display:none"></div>
+  </div>
+
+  <script>
+    let side = 'oszlató', formation = 'vonal', running = false, score = 0;
+    let squad = [], protesters = [], molotovs = [], keys = {};
+    let gidran = { x: 40, y: 220 };
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+
+    const images = {};
+    function loadImg(name, src) {
+      const img = new Image();
+      img.src = src;
+      images[name] = img;
+    }
+    loadImg('soldier', '/images/soldier.png');
+    loadImg('protester', '/images/protester.png');
+    loadImg('gidran', '/images/gidran.png');
+
+    window.addEventListener('keydown', e => { keys[e.key] = true; });
+    window.addEventListener('keyup', e => { keys[e.key] = false; });
+
+    function start(s) {
+      side = s;
+      document.getElementById('menu').style.display = 'none';
+      canvas.style.display = 'block';
+      document.getElementById('controls').style.display = 'flex';
+      document.getElementById('exitBtn').style.display = 'block';
+      init();
+      running = true;
+      loop();
+    }
+
+    function exitGame() {
+      if (!confirm('Kilépés?')) return;
+      running = false;
+      document.getElementById('menu').style.display = 'flex';
+      canvas.style.display = 'none';
+      document.getElementById('controls').style.display = 'none';
+      document.getElementById('exitBtn').style.display = 'none';
+    }
+
+    function init() {
+      // Teljes szakasz: 3 raj + törzs ≈ 27 fő
+      squad = [];
+      const roles = ['PK','ALT','HÍR','SNIP','MG','MG','SHOT','SHOT','EXT','EXT'];
+      for (let i = 0; i < 27; i++) {
+        const raj = Math.floor(i / 9);
+        squad.push({
+          x: 180 + (i % 9) * 28 + raj * 10,
+          y: 240 + raj * 8,
+          h: 100,
+          shield: i % 3 !== 1,
+          role: roles[i % roles.length],
+          vx: 0, vy: 0
+        });
+      }
+      protesters = Array.from({ length: 18 }, (_, i) => ({
+        x: 650 + i * 18,
+        y: 250 + Math.sin(i) * 6,
+        h: 60,
+        vx: 0, vy: 0
+      }));
+      molotovs = [];
+      score = 0;
+      buildControls();
+    }
+
+    function buildControls() {
+      const forms = ['vonal','ék','doboz','oszlop'];
+      const cmds = ['pajzsot fel','pajzsot le','gázálarcot fel','vízágyú'];
+      let html = forms.map(f => `<button onclick="formation='${f}'">${f}</button>`).join('');
+      html += cmds.map(c => `<button onclick="doCmd('${c}')">${c}</button>`).join('');
+      document.getElementById('controls').innerHTML = html;
+    }
+
+    function doCmd(c) {
+      if (c === 'pajzsot fel') squad.forEach(s => s.shield = true);
+      if (c === 'pajzsot le') squad.forEach(s => s.shield = false);
+    }
+
+    function update() {
+      // Nyilas irányítás (egész szakasz)
+      let speed = 0;
+      if (keys['ArrowRight'] || keys['d']) speed = 1.2;
+      if (keys['ArrowLeft'] || keys['a']) speed = -1.2;
+      squad.forEach(s => { s.vx = speed; s.x += s.vx; });
+      gidran.x += speed * 0.9;
+
+      // Formáció
+      const base = gidran.x + 150;
+      squad.forEach((s, i) => {
+        const raj = Math.floor(i / 9);
+        const pos = i % 9;
+        if (formation === 'ék') s.x = base + pos * 22 + raj * 40;
+        else if (formation === 'doboz') s.x = base + (pos % 5) * 32 + raj * 30;
+        else if (formation === 'oszlop') s.x = base + pos * 14 + raj * 20;
+        else s.x = base + pos * 26 + raj * 25;
+        s.y = 230 + raj * 12;
+      });
+
+      // Tüntető fizika
+      protesters.forEach(p => {
+        if (p.h <= 0) return;
+        p.vx += (Math.random() - 0.5) * 0.15;
+        p.vx *= 0.96;
+        p.x += p.vx;
+        if (Math.random() < 0.008) {
+          molotovs.push({ x: p.x, y: p.y, vx: -2.5 - Math.random(), vy: -1.5, life: 120 });
+        }
+      });
+
+      // Molotov fizika
+      molotovs.forEach(m => {
+        m.x += m.vx;
+        m.y += m.vy;
+        m.vy += 0.08;
+        m.life--;
+      });
+      molotovs = molotovs.filter(m => m.life > 0 && m.y < 380);
+
+      // Ütközés
+      squad.forEach(s => {
+        if (s.h <= 0) return;
+        protesters.forEach(p => {
+          if (p.h > 0 && Math.abs(s.x - p.x) < 28) {
+            p.h -= 0.4;
+            s.h -= s.shield ? 0.08 : 0.25;
+          }
+        });
+        molotovs.forEach(m => {
+          if (Math.abs(m.x - s.x) < 18 && Math.abs(m.y - s.y) < 30) {
+            s.h -= s.shield ? 0.6 : 2;
+            m.life = 0;
+          }
+        });
+      });
+
+      score = protesters.filter(p => p.h <= 0).length * 8 + squad.filter(s => s.h > 0).length;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, 900, 450);
+      ctx.fillStyle = '#1e293b';
+      ctx.fillRect(0, 0, 900, 450);
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(0, 300, 900, 150);
+
+      // GIDRAN
+      const g = images.gidran;
+      if (g && g.complete) ctx.drawImage(g, gidran.x, gidran.y - 5, 130, 70);
+      else { ctx.fillStyle = '#4d7c0f'; ctx.fillRect(gidran.x, gidran.y, 120, 55); }
+
+      // Katonák
+      squad.forEach(s => {
+        if (s.h <= 0) return;
+        const img = images.soldier;
+        if (img && img.complete) {
+          ctx.drawImage(img, s.x - 8, s.y - 10, 40, 72);
+        } else {
+          ctx.fillStyle = '#2563eb';
+          ctx.fillRect(s.x, s.y, 28, 55);
+          if (s.shield) { ctx.fillStyle = 'rgba(180,220,255,0.6)'; ctx.fillRect(s.x - 8, s.y - 5, 12, 60); }
+        }
+        ctx.fillStyle = '#22c55e';
+        ctx.fillRect(s.x, s.y - 6, 28 * (s.h / 100), 3);
+      });
+
+      // Tüntetők
+      protesters.forEach(p => {
+        if (p.h <= 0) return;
+        const img = images.protester;
+        if (img && img.complete) ctx.drawImage(img, p.x - 6, p.y - 8, 32, 62);
+        else { ctx.fillStyle = '#b91c1c'; ctx.fillRect(p.x, p.y, 22, 48); }
+      });
+
+      // Molotovok
+      molotovs.forEach(m => {
+        ctx.fillStyle = '#f97316';
+        ctx.beginPath();
+        ctx.arc(m.x, m.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 15px sans-serif';
+      ctx.fillText(`CRC PLAY | ${formation.toUpperCase()} | ${Math.floor(score)} pont | Nyilak: mozgás`, 12, 24);
+    }
+
+    function loop() {
+      if (!running) return;
+      update();
+      draw();
+      requestAnimationFrame(loop);
+    }
+  </script>
 </body>
 </html>
